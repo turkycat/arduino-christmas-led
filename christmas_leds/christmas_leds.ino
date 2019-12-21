@@ -17,7 +17,7 @@ void setup() {
 }
 
 unsigned long scenarioTimeInSeconds = 60;
-unsigned long scenarioTimeInMicros = scenarioTimeInSeconds * 1000000;
+unsigned long scenarioTimeInMillis = scenarioTimeInSeconds * 1000;
 
 uint32_t rainbow[7] = { 0xFFFFFFFF, 0xFFFF0000, 0xFFFF7F00, 0xFFFFFF00, 0xFF00FF00, 0xFF0000FF, 0xFF8F00FF };
 uint32_t christmas[6] = { 0xFFFF0000, 0xFFFF0000, 0xFFFF0000, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00 };
@@ -32,16 +32,17 @@ void loop() {
 void arrayShift(uint32_t arr[], int numColors) {
   beginScenario(arr, numColors);
   
-  unsigned long endTime = micros() + scenarioTimeInMicros;
-  uint32_t startIndex = 0;
+  unsigned long endTime = millis() + scenarioTimeInMillis;
+  uint32_t startIndex = 1; //we've already printed at index 0 during beginScenario()
   
-  while(endTime > micros())
+  while(endTime > millis())
   {
     pixels.clear();
   
     for(int i=0; i<NUMPIXELS; i++)
     {
-      pixels.setPixelColor((startIndex + i) % NUMPIXELS, arr[i % numColors]);
+      uint32_t currentPixel = (startIndex + i) % NUMPIXELS;
+      pixels.setPixelColor(currentPixel, arr[i % numColors]);
     }
     pixels.show();
     
@@ -64,10 +65,10 @@ void beginScenario(uint32_t arr[], int numColors)
 
 void growColors()
 {
-  unsigned long endTime = micros() + scenarioTimeInMicros;
+  unsigned long endTime = millis() + scenarioTimeInMillis;
   uint32_t power = 0;
   
-  while(endTime > micros())
+  while(endTime > millis())
   {
     //pixels.clear();
   
