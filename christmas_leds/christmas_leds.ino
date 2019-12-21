@@ -39,9 +39,9 @@ void arrayShift(uint32_t arr[], int numColors) {
   {
     pixels.clear();
   
-    for(int j=0; j<NUMPIXELS; j++)
+    for(int i=0; i<NUMPIXELS; i++)
     {
-      pixels.setPixelColor((startIndex + j) % NUMPIXELS, arr[j % numColors]);
+      pixels.setPixelColor((startIndex + i) % NUMPIXELS, arr[i % numColors]);
     }
     pixels.show();
     
