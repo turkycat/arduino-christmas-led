@@ -3,8 +3,13 @@
  #include <avr/power.h>
 #endif
 
+//this branch has special code to skip a few LEDs that run behind the tree
+//it should always be rebased on master
+#define SKIP_LED 59
+#define SKIP_COUNT 150
+
 #define PIN 6
-#define NUMPIXELS 182
+#define NUMPIXELS 300
 #define DELAYVAL 500
 Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
@@ -42,6 +47,12 @@ void arrayShift(uint32_t arr[], int numColors) {
     for(int i=0; i<NUMPIXELS; i++)
     {
       uint32_t currentPixel = (startIndex + i) % NUMPIXELS;
+      if(currentPixel >= SKIP_LED && currentPixel <= SKIP_LED + SKIP_COUNT)
+      {
+        pixels.setPixelColor(currentPixel, 0x0);
+        continue;
+      }
+      
       pixels.setPixelColor(currentPixel, arr[i % numColors]);
     }
     pixels.show();
@@ -58,6 +69,7 @@ void beginScenario(uint32_t arr[], int numColors)
 {
   for(int i = 0; i < NUMPIXELS; i++)
   {
+    if(i == SKIP_LED) i += SKIP_COUNT;
     pixels.setPixelColor(i, arr[i % numColors]);
     pixels.show();
   }
